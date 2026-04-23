@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import ReportList from "@/components/ReportList";
 import ProcessQueue from "@/components/ProcessQueue";
 
+
 export default function Home() {
   return (
     <main className=" bg-gray-200 p-2 min-h-screen">

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-
+import setIsLoginOpen from './LoginModal'; 
 export default function Header() {
   const [usuario, setUsuario] = useState(null);
 
