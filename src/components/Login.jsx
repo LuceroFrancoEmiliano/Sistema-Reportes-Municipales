@@ -4,6 +4,29 @@ import React from 'react';
 export default function Login({ isOpen, onClose }) {
   if (!isOpen) return null; 
 
+    // Fragmento a actualizar en Login.jsx
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = e.target[0].value;
+    const password = e.target[1].value;
+
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ user, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem('user', JSON.stringify({ name: data.user }));
+      onClose();
+      window.location.reload(); // Recargamos para que el Header detecte al usuario
+    } else {
+      alert("Error: " + data.error);
+    }
+  };
+
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* CAPA TRASLÚCIDA: El onClick aquí permite cerrar al tocar fuera */}
