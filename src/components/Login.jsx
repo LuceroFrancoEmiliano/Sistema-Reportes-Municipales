@@ -6,25 +6,36 @@ export default function Login({ isOpen, onClose }) {
 
     // Fragmento a actualizar en Login.jsx
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const user = e.target[0].value;
-    const password = e.target[1].value;
+  e.preventDefault();
+  const user = e.target[0].value;
+  const password = e.target[1].value;
 
+  try {
     const res = await fetch('/api/login', {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user, password }),
     });
 
     const data = await res.json();
 
-    if (data.success) {
-      localStorage.setItem('user', JSON.stringify({ name: data.user }));
-      onClose();
-      window.location.reload(); // Recargamos para que el Header detecte al usuario
+    // Comprobamos si el mensaje es exactamente lo que devuelve tu base de datos
+    if (res.ok && data.success) {
+      // Guardamos en localStorage para que el Header lo vea
+      localStorage.setItem('user', JSON.stringify({ name: user }));
+      onClose(); // Cerramos el modal
+      window.location.reload(); // Recargamos para actualizar el Header
     } else {
-      alert("Error: " + data.error);
+      // Si es 401 o error, mostramos el mensaje de la base de datos
+      alert("Error de acceso: " + (data.error || "Credenciales inválidas"));
+      // Opcional: vaciar campos según el manual
+      e.target[0].value = "";
+      e.target[1].value = "";
     }
-  };
+  } catch (error) {
+    alert("Error de conexión con el servidor");
+  }
+};
 
 
   return (
@@ -49,7 +60,7 @@ export default function Login({ isOpen, onClose }) {
           <p className="text-gray-500 text-sm">Ingresa tus credenciales para continuar</p>
         </div>
 
-        <form className="space-y-4" onClick={(e) => e.stopPropagation()}>
+        <form className="space-y-4" onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()}>
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Usuario</label>
             <input 

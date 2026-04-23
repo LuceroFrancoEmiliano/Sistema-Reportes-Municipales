@@ -13,9 +13,9 @@ public class OracleBridge {
         String pass = args[2];
 
         // 2. Datos de conexión (Asegúrate que coincidan con tu .env)
-        String jdbcUrl = "jdbc:oracle:thin:@tu_host:1521:tu_servicio"; 
-        String dbUser = "tu_usuario_db";
-        String dbPass = "tu_password_db";
+        String jdbcUrl = "jdbc:oracle:thin:@192.168.100.81:1521/prod.jotafi"; 
+        String dbUser = "batchreport";
+        String dbPass = "brep";
 
         // 3. Ejecución
         try (Connection conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass)) {

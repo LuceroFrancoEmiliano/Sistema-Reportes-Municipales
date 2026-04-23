@@ -6,10 +6,20 @@ export async function POST(request) {
   try {
     const result = await oracleService.login(user, password);
     
-    if (result.message === "OK") { // O el mensaje de éxito que devuelva tu PKG
-      return Response.json({ success: true, user: user });
+    // IMPORTANTE: Comparamos con el mensaje exacto que tira tu base de datos
+    // Usamos .toUpperCase() y .includes() para evitar errores de espacios o mayúsculas
+    if (result.status === "OK" && result.message.toUpperCase().includes("LOGUEADO")) {
+      return Response.json({ 
+        success: true, 
+        user: user,
+        dbMsg: result.message 
+      });
     } else {
-      return Response.json({ success: false, error: result.message }, { status: 401 });
+      // Si el mensaje no es "LOGUEADO", devolvemos el error real de la DB
+      return Response.json({ 
+        success: false, 
+        error: result.message 
+      }, { status: 401 });
     }
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
